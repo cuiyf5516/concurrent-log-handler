@@ -67,7 +67,7 @@ from io import TextIOWrapper
 from logging.handlers import BaseRotatingHandler, TimedRotatingFileHandler
 from typing import TYPE_CHECKING, Dict, Generator, List, Optional, Tuple
 
-from portalocker import LOCK_EX, lock, unlock
+from portalocker import LOCK_EX, LOCK_NB, lock, unlock
 
 try:
     import grp
@@ -436,7 +436,7 @@ class ConcurrentRotatingFileHandler(BaseRotatingHandler):
         if self.stream_lock:
             for _i in range(self.maxLockAttempts):
                 try:
-                    lock(self.stream_lock, LOCK_EX)
+                    lock(self.stream_lock, LOCK_EX | LOCK_NB)
                     self.is_locked = True
                     # self._console_log("Acquired lock")
                     break
